@@ -1,28 +1,24 @@
-async function enviarScript(scriptText){
+async function sendScript(scriptText){
 	const lines = scriptText.split(/[\n\t]+/).map(line => line.trim()).filter(line => line);
-	main = document.querySelector("#main"),
-	textarea = main.querySelector(`div[contenteditable="true"]`)
-	
-	if(!textarea) throw new Error("Não há uma conversa aberta")
-	
+	const main = document.querySelector("#main");
+	const textarea = main.querySelector('div[contenteditable="true"]');
+
+	if(!textarea) throw new Error("There isn't a chat open")
 	for(const line of lines){
 		console.log(line)
-	
 		textarea.focus();
 		document.execCommand('insertText', false, line);
 		textarea.dispatchEvent(new Event('change', {bubbles: true}));
-	
 		setTimeout(() => {
-			(main.querySelector(`[data-testid="send"]`) || main.querySelector(`[data-icon="send"]`)).click();
+			document.querySelector('[data-icon="wds-ic-send-filled"]').click();
 		}, 100);
-		
 		if(lines.indexOf(line) !== lines.length - 1) await new Promise(resolve => setTimeout(resolve, 250));
 	}
-	
+
 	return lines.length;
 }
 
-enviarScript(`
+sendScript(`
 SHREK
 
 Written by
@@ -3700,4 +3696,4 @@ black) Oh, that's funny. Oh. Oh. I can't
 breathe. I can't breathe.
 
 THE END
-`).then(e => console.log(`Código finalizado, ${e} mensagens enviadas`)).catch(console.error)
+`).then(e => console.log(`Code finished, ${e} messages sent`)).catch(console.error)
