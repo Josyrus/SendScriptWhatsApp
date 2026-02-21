@@ -1,18 +1,17 @@
 async function sendScript(scriptText){
-	const lines = scriptText.split(/[\n\t]+/).map(line => line.trim()).filter(line => line);
-	main = document.querySelector("#main"),
-	textarea = main.querySelector(`div[contenteditable="true"]`)
+	const lines = scriptText.split(/[\n\t]+/).map(line => line.trim()).filter(line => line),
+	textarea = document.querySelector("div[aria-activedescendant]");
 	if(!textarea) throw new Error("There isn't a chat open")
-	for(const line of lines){
-		console.log(line)
-		textarea.focus();
-		document.execCommand('insertText', false, line);
-		textarea.dispatchEvent(new Event('change', {bubbles: true}));
-		setTimeout(() => {
-			document.querySelector('[data-icon="wds-ic-send-filled"]').click();
-		}, 100);
-		if(lines.indexOf(line) !== lines.length - 1) await new Promise(resolve => setTimeout(resolve, 250));
-	}
+		for(const line of lines)
+		{
+			console.log(line)
+			textarea.focus();
+			document.execCommand("insertText", false, line);
+			textarea.dispatchEvent(new Event('change', {bubbles: true}));
+			await new Promise(r => setTimeout(r, 300));
+			textarea.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles: true}));
+			await new Promise(r => setTimeout(r, 300));
+		}
 	return lines.length;
 }
 sendScript(`
@@ -1385,4 +1384,4 @@ I'm sorry. I'm sorry, everyone. Can we stop here?
 I'm not making a major life decision during a production number!
 All right. Take ten, everybody. Wrap it up, guys.
 I had virtually no rehearsal for that.
-`).then(e => console.log(`Code finished, ${e} messages sent`)).catch(console.error)
+`).then(e => console.log(`Code finished, ${e} messages sent`)).catch(console.error);
